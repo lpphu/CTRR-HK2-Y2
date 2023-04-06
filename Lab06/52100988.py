@@ -48,7 +48,7 @@ def printPrime(N):
 print(printPrime(20))
 
 ''' Exercise 04 '''
-def ex_04(n):
+def ex_04(n): 
     if n<2: 
         return []
     else:
@@ -66,6 +66,7 @@ def ex_04(n):
             if Flag:
                 O.append(i)
         return O
+    
 print(ex_04(20))
 
 ''' Exercise 05 '''
