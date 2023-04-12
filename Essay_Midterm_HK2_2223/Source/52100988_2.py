@@ -1,30 +1,36 @@
 # 52100988 Lữ Phúc Phú
 
-from Crypto.PublicKey import RSA
-from Crypto.Cipher import PKCS1_OAEP
+from cryptography.hazmat.primitives.asymmetric import rsa, padding
+from cryptography.hazmat.primitives import serialization, hashes
 
 # Generate RSA key pair
-key = RSA.generate(2048)
+def generate_key_pair():
+    private_key = rsa.generate_private_key(
+        public_exponent=65537, key_size=2048
+    )
+    public_key = private_key.public_key()
+    return private_key, public_key
 
-# Get the public and private key in PEM format
-public_key = key.publickey().export_key()
-private_key = key.export_key()
+# Encrypt a message with RSA public key
+def encrypt_message(message, public_key):
+    ciphertext = public_key.encrypt(
+        message.encode(),
+        padding.OAEP(
+            mgf=padding.MGF1(algorithm=hashes.SHA256()),
+            algorithm=hashes.SHA256(),
+            label=None
+        )
+    )
+    return ciphertext
 
-# Create a cipher object using the public key
-cipher = PKCS1_OAEP.new(RSA.import_key(public_key))
-
-# Encrypt the message
-message = b"Hello, World!"
-ciphertext = cipher.encrypt(message)
-
-# Print the encrypted message
-print("Encrypted message: ", ciphertext)
-
-# Create a cipher object using the private key
-cipher = PKCS1_OAEP.new(RSA.import_key(private_key))
-
-# Decrypt the message
-plaintext = cipher.decrypt(ciphertext)
-
-# Print the decrypted message
-print("Decrypted message: ", plaintext.decode())
+# Decrypt a message with RSA private key
+def decrypt_message(ciphertext, private_key):
+    plaintext = private_key.decrypt(
+        ciphertext,
+        padding.OAEP(
+            mgf=padding.MGF1(algorithm=hashes.SHA256()),
+            algorithm=hashes.SHA256(),
+            label=None
+        )
+    )
+    return plaintext.decode()
