@@ -14,3 +14,8 @@ def inverse_modulo(a, b):
     else:
         return None
     
+print(inverse_modulo(26,15))
+print(inverse_modulo(3,15))
+print(inverse_modulo(29,15))
+print(inverse_modulo(22,1))
+print(inverse_modulo(22,0))
